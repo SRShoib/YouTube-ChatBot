@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube RAG Chatbot</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div class="app">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Chrome Extension</p>
+          <h1>YouTube RAG Chatbot</h1>
+          <p class="hero-text">Extract the transcript, ask focused questions, and get grounded answers from the current video.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <button id="loadTranscriptBtn" class="load-button">Load Transcript</button>
+        <p id="status" class="status-pill">Open a YouTube watch page, then load the transcript.</p>
+      </div>
+
+      <div class="panel">
+        <label for="question">Ask about this video</label>
+        <textarea
+          id="question"
+          placeholder="Example: What are the main points of this video?"
+        ></textarea>
+
+        <button id="askBtn" class="ask-button">Ask</button>
+      </div>
+
+      <div class="answer-box">
+        <div class="answer-header">
+          <h2>Answer</h2>
+          <span class="answer-badge">Grounded</span>
+        </div>
+        <div id="answer">Your answer will appear here.</div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

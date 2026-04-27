@@ -1,0 +1,54 @@
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+backend/.venv/
+backend/venv/
+
+# Python packaging and test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local application/runtime files
+*.log
+*.sqlite
+*.sqlite3
+*.db
+.cache/
+
+# Browser extension build/package artifacts
+extension/dist/
+extension/build/
+extension/web-ext-artifacts/
+extension/*.zip
+extension/*.crx
+extension/*.pem
+
+# Editor and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
