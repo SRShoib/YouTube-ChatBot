@@ -1,5 +1,5 @@
 // TODO: replace with your deployed Render URL, e.g. "https://your-app.onrender.com"
-const BACKEND_URL = "http://127.0.0.1:8000";
+const BACKEND_URL = "https://youtube-chatbot-tzq1.onrender.com";
 
 const loadTranscriptBtn = document.getElementById("loadTranscriptBtn");
 const askBtn = document.getElementById("askBtn");
