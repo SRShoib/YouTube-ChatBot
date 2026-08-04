@@ -1,3 +1,4 @@
+// TODO: replace with your deployed Render URL, e.g. "https://your-app.onrender.com"
 const BACKEND_URL = "http://127.0.0.1:8000";
 
 const loadTranscriptBtn = document.getElementById("loadTranscriptBtn");
@@ -71,6 +72,16 @@ function getVideoIdFromUrl(url) {
   }
 }
 
+async function isVideoIndexed(videoId) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/video-status/${videoId}`);
+    const data = await readJsonSafely(response);
+    return Boolean(response.ok && data.indexed);
+  } catch (error) {
+    return false;
+  }
+}
+
 async function loadTranscript() {
   try {
     setStatus("Loading transcript...");
@@ -123,12 +134,24 @@ async function askQuestion() {
 
     const tab = await getActiveTab();
     const activeVideoId = getVideoIdFromUrl(tab?.url);
-    const videoId = await getCurrentVideo();
+    let videoId = await getCurrentVideo();
     if (!videoId) {
       throw new Error("Load a transcript before asking a question.");
     }
     if (activeVideoId && activeVideoId !== videoId) {
       throw new Error("This is a different video. Load the transcript again.");
+    }
+
+    setStatus("Checking transcript...");
+    if (!(await isVideoIndexed(videoId))) {
+      // The free-tier backend sleeps when idle and forgets indexed videos on
+      // wake. Reload silently instead of surfacing a confusing wrong answer.
+      setStatus("Backend woke up and forgot this video. Reloading transcript...");
+      await loadTranscript();
+      videoId = await getCurrentVideo();
+      if (!videoId) {
+        throw new Error("Could not reload the transcript. Try again.");
+      }
     }
 
     setStatus("Asking question...");

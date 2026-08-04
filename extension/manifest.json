@@ -6,7 +6,7 @@
   "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": [
     "https://www.youtube.com/*",
-    "http://127.0.0.1:8000/*"
+    "https://your-app.onrender.com/*"
   ],
   "icons": {
     "16": "icon16.png",

@@ -2,7 +2,7 @@ import os
 from typing import List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
@@ -12,7 +12,8 @@ from langserve import add_routes
 from pydantic import BaseModel, Field
 
 from rag_chain import rag_runnable
-from store import save_vector_store
+from rate_limit import rate_limit_indexing, rate_limit_questions
+from store import get_vector_store, save_vector_store
 
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
@@ -43,7 +44,12 @@ def health() -> dict:
     return {"ok": True}
 
 
-@app.post("/index-video")
+@app.get("/video-status/{video_id}")
+def video_status(video_id: str) -> dict:
+    return {"indexed": get_vector_store(video_id) is not None}
+
+
+@app.post("/index-video", dependencies=[Depends(rate_limit_indexing)])
 def index_video(payload: IndexVideoRequest) -> dict:
     if not payload.videoId.strip():
         raise HTTPException(status_code=400, detail="videoId is required.")
@@ -91,4 +97,4 @@ def index_video(payload: IndexVideoRequest) -> dict:
     }
 
 
-add_routes(app, rag_runnable, path="/rag")
+add_routes(app, rag_runnable, path="/rag", dependencies=[Depends(rate_limit_questions)])
