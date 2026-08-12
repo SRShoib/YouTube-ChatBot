@@ -63,6 +63,30 @@ async function readJsonSafely(response) {
   }
 }
 
+function formatWaitTime(seconds) {
+  const totalSeconds = Number(seconds);
+  if (!totalSeconds || totalSeconds <= 0) {
+    return "a little while";
+  }
+
+  const minutes = Math.ceil(totalSeconds / 60);
+  if (minutes < 60) {
+    return `about ${minutes} minute${minutes === 1 ? "" : "s"}`;
+  }
+
+  const hours = Math.ceil(minutes / 60);
+  return `about ${hours} hour${hours === 1 ? "" : "s"}`;
+}
+
+function readErrorMessage(response, data, fallback) {
+  if (response.status === 429) {
+    const waitTime = formatWaitTime(response.headers.get("Retry-After"));
+    return `This shared demo backend has a usage limit to keep it free for everyone. Please try again in ${waitTime}.`;
+  }
+
+  return data.detail || fallback;
+}
+
 function getVideoIdFromUrl(url) {
   try {
     const parsedUrl = new URL(url);
@@ -113,7 +137,7 @@ async function loadTranscript() {
 
     const indexData = await readJsonSafely(indexResponse);
     if (!indexResponse.ok) {
-      throw new Error(indexData.detail || "Failed to index transcript.");
+      throw new Error(readErrorMessage(indexResponse, indexData, "Failed to index transcript."));
     }
 
     await saveCurrentVideo(response.data.videoId);
@@ -172,7 +196,7 @@ async function askQuestion() {
 
     const data = await readJsonSafely(response);
     if (!response.ok) {
-      throw new Error(data.detail || "Failed to get an answer.");
+      throw new Error(readErrorMessage(response, data, "Failed to get an answer."));
     }
 
     const answer =
