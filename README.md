@@ -126,6 +126,7 @@ Open `http://127.0.0.1:8000/health` and confirm it returns:
 - For this MVP, the transcript panel may need to be opened manually before loading.
 - FAISS is stored only in memory (capped at the 50 most recently used videos), so indexed videos are lost when the backend restarts or sleeps. The popup checks `GET /video-status/{video_id}` before asking a question and silently re-indexes if the backend forgot the video.
 - The hosted backend has no auth, since anyone downloading the extension shares it — an OpenAI spend cap is the safeguard against abuse, not a backend password.
+- The hosted backend rate-limits by network: 10 transcript loads and 20 questions per hour. Going over shows a "try again in X minutes" message instead of an answer.
 - This version uses `POST /rag/invoke`; `POST /rag/stream` is available for future streaming UI work but is not used in the popup yet.
 - LangSmith tracing is optional and only works after setting the LangSmith environment variables and restarting the backend.
 
