@@ -6,7 +6,7 @@
   "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": [
     "https://www.youtube.com/*",
-    "https://your-app.onrender.com/*"
+    "https://youtube-chatbot-tzq1.onrender.com/*"
   ],
   "icons": {
     "16": "icon16.png",
